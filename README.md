@@ -52,17 +52,37 @@ The lineage view shows how untrusted pages become normalized evidence records, c
 
 ---
 
-## 🤖 Specialized Agents & Responsibilities
+## 🤖 Exact Agent Architecture
 
-| Agent | Responsibility | Implementation Details |
-| :--- | :--- | :--- |
-| **Planner** | Decomposes complex research questions into 3–5 non-overlapping, answerable subquestions. | LLM prompt via Mesh API with strict JSON schema. |
-| **Researcher** | Generates targeted search queries and gathers canonical web evidence with source quality scores. | DuckDuckGo search + News fallback + Wikipedia Full-Text API fallback with SSRF protection. |
-| **ClaimWriter** | Extracts atomic factual statements accompanied by verbatim source quotes tied to unique evidence IDs. | LLM extraction over fetched passages. Cites only provided evidence IDs. |
-| **Verifier** | Dual-stage verification: (1) Deterministic quote string containment check; (2) Semantic entailment assessment. | Hard Python substring match + skeptical LLM entailment judge. Unverified claims are dropped. |
-| **Contradiction Detector** | Evaluates accepted claims across distinct sources for numerical, timeline, or factual discrepancies. | Cross-source comparison; highlights divergent perspectives in the report. |
-| **Synthesizer** | Assembles the final structured report containing **only** verified claims. | 100% deterministic Python composition — zero hallucination risk in synthesis. |
-| **Follow-Up Agent** | Answers conversational follow-up questions grounded strictly in the previous run's retrieved evidence. | Semantic lookup via ChromaDB; strictly constrained to verified run records. |
+DeepDive has one primary LangGraph research workflow and one separate follow-up path. The primary graph contains exactly three orchestration nodes:
+
+```text
+START
+  → plan
+  → research_and_verify
+      ↳ retry research_and_verify while any subquestion has no supported claim
+        and round_id < MAX_RESEARCH_ROUNDS
+  → synthesize
+  → END
+```
+
+`research_and_verify` is a composite graph node. For each still-uncovered subquestion, it calls the Researcher, stores the returned evidence, calls the ClaimWriter, and sends each new candidate claim through the Verifier. These operations are sequential in the current implementation; the specialist classes are not separate LangGraph nodes.
+
+The components and their exact responsibilities are:
+
+| Component | Model-backed? | Where it runs | Exact responsibility and boundary |
+| :--- | :---: | :--- | :--- |
+| **Coordinator** | No | Primary LangGraph workflow | Owns graph state, audit events, the coverage test, and the bounded retry. A subquestion counts as covered only when at least one claim for it has a `supported` verdict. It retries only uncovered subquestions and stops after `MAX_RESEARCH_ROUNDS` total rounds. |
+| **Planner** | Yes, through Mesh | `plan` node | Requests 3–5 non-overlapping, answerable subquestions. The code keeps at most five non-empty strings, truncates each to 300 characters, and fails the run if none remain. |
+| **Researcher** | Yes, through Mesh, plus deterministic web retrieval | `research_and_verify` node | Asks the model for one search query per pending subquestion, then passes that query to `WebRetriever`. On retries, the prompt asks for missing primary evidence or alternate credible sources. It does not invent or directly fetch sources itself. |
+| **WebRetriever** | No | Called by Researcher | Tries DuckDuckGo text search; if that returns no items, DuckDuckGo News; if neither returns items, Wikipedia full-text search. It accepts only HTTP(S) URLs that pass SSRF checks, revalidates the final redirect URL, fetches HTML, removes common non-content elements, truncates extracted text to 8,500 characters, assigns a heuristic domain-quality score, and returns at most `SEARCH_RESULTS_PER_QUERY` evidence records. |
+| **ClaimWriter** | Yes, through Mesh | `research_and_verify` node | Requests up to five atomic candidate claims for one subquestion. Each candidate must include a statement, a non-empty quote, and an evidence ID present in that call's supplied evidence. This stage validates those fields and the ID, but it does not itself prove that the quote occurs in the excerpt. |
+| **Verifier** | Partly | `research_and_verify` node, after ClaimWriter | First performs an exact, case-sensitive Python substring check: `claim.quote` must occur in the stored evidence excerpt. Only then does a separate Mesh call judge whether the passage directly supports the entire claim. Only `supported` claims enter the accepted set; `rejected` and `unverified` claims are retained in the report's rejection records and excluded from the narrative. |
+| **ContradictionDetector** | Yes, through Mesh | Beginning of `synthesize`, after the retry loop | Examines accepted claims within each subquestion and proposes conflicting claim IDs. The Coordinator keeps a proposal only when it resolves to at least two already-accepted claims from at least two evidence IDs. Model-written discrepancy descriptions are discarded; the report renders only the verified claim statements and evidence IDs selected by that validation. |
+| **Synthesizer** | No | `synthesize` node | Deterministically formats accepted claim statements and their source URLs into Markdown, marks per-subquestion coverage, adds validated cross-source comparisons, computes metrics, saves the report, and logs completion. It makes no model call and cannot add new factual prose from a model. |
+| **FollowUpAgent** | Yes, through Mesh | Separate `POST /runs/{id}/followup` request; not in the LangGraph workflow | Loads the saved report (or the report supplied in the request). Locally it queries Chroma with a deterministic hashed lexical vector filtered by `run_id`; on Vercel, where Chroma is disabled, or if lookup fails, it falls back to the first four report evidence excerpts. It asks the model to answer only from the verified-claim summary and selected excerpts with evidence-ID citations. If that call fails, the code returns a generic fallback pointing to up to three verified evidence IDs rather than generating a new factual answer. |
+
+All model-backed components use the single client boundary in `app/mesh.py`. Live mode sends those calls to the Mesh-compatible base URL. Demo mode substitutes `SimulationMeshLLM`, a deterministic local simulator, while using the same component interfaces. Web retrieval, deterministic checks, storage, lexical vectorization, graph routing, and synthesis are not model calls.
 
 ---
 
@@ -80,7 +100,7 @@ These checked-in results were produced with live web retrieval and all agent cal
 | `heat_pumps` | What evidence supports and limits the energy savings of residential heat pumps? | 25 | 16 | **64.0%** | **80.0%** | 1 (Under-supported retry triggered) |
 | `grid_storage` | What are the main grid-scale battery storage safety and reliability risks? | 12 | 9 | **75.0%** | **60.0%** | 1 (Under-supported retry triggered) |
 
-*Audit trails for every evaluation run are permanently recorded in `deepdive.sqlite3` and viewable via the web interface.*
+*In local mode, audit trails for evaluation runs are appended to `deepdive.sqlite3` and are viewable through the web interface. In Vercel mode, the `/research` response includes that request's audit events because local serverless files are not guaranteed to persist across instances.*
 
 ---
 
@@ -95,7 +115,7 @@ These checked-in results were produced with live web retrieval and all agent cal
    - Domain heuristic scores: `.gov` and `.edu` (0.95), global agencies (`who.int`, `iea.org`, `sec.gov`) (0.95), non-profits (`.org`) (0.7), and commercial/media (0.5).
    - Displayed in the visual Evidence Inspector alongside trust meters.
 4. **Conversational Follow-Up Agent (`POST /runs/{id}/followup`)**:
-   - Queries ChromaDB vector store (`where={"run_id": id}`) to answer follow-up queries grounded strictly in previously retrieved source excerpts.
+   - Locally queries ChromaDB with deterministic hashed lexical vectors (`where={"run_id": id}`); Vercel and lookup-failure paths use evidence carried in the saved or request-supplied report.
 5. **Interactive Single-Page Web Dashboard**:
    - Dark-mode glassmorphic interface with interactive DAG pipeline visualizer, live metrics strip, clickable citation badges, evidence inspector drawer, SQLite audit trail explorer, and one-click PDF/Print export.
 6. **Robust Web Retrieval & Anti-Bot Fallback**:
@@ -107,7 +127,7 @@ These checked-in results were produced with live web retrieval and all agent cal
 - **Verification is a hard boundary:** a candidate cannot reach the report unless its quote exists verbatim in the stored excerpt and the separate verifier accepts full-claim entailment.
 - **Synthesis is deterministic:** accepted claims are formatted by Python, preventing a final writing pass from adding uncited facts.
 - **Retries are coverage-driven and bounded:** missing subquestion coverage loops back to targeted research without creating an unbounded agent run.
-- **Contradictions retain verified wording:** the detector may select claims for comparison, but its free-form prose is never copied into the report.
+- **Contradictions retain verified wording:** the detector may nominate claim IDs, but the Coordinator requires multiple accepted claims from multiple evidence IDs and never copies the detector's free-form prose into the report.
 - **Model access has one choke point:** generative calls are created only in `app/mesh.py`, using the mandatory Mesh-compatible base URL.
 
 ---
@@ -199,9 +219,9 @@ python -m evaluation.run_eval
 | `POST` | `/research` | Executes multi-agent research on a question (`{"question":"..."}`). |
 | `GET` | `/runs` | Lists recent research runs with metrics and timestamps. |
 | `GET` | `/runs/{id}` | Retrieves full JSON report, claims, evidence, and coverage for a run. |
-| `GET` | `/runs/{id}/audit` | Retrieves the immutable SQLite event log for a run. |
+| `GET` | `/runs/{id}/audit` | Retrieves the SQLite audit-event rows recorded for a locally available run. |
 | `GET` | `/runs/{id}/report.md` | Downloads the clean Markdown report. |
-| `POST` | `/runs/{id}/followup` | Asks a follow-up question grounded in the run's ChromaDB evidence. |
+| `POST` | `/runs/{id}/followup` | Asks a follow-up using the saved or request-supplied report; local mode also attempts run-filtered Chroma retrieval. |
 | `GET` | `/evaluation/questions`| Returns Track 01 benchmark questions. |
 | `POST` | `/evaluation/run` | Triggers evaluation suite execution. |
 

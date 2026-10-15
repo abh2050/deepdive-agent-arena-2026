@@ -1,4 +1,4 @@
-"""Four specialized agents. Verification is separate from drafting."""
+"""Research specialists plus deterministic synthesis and a separate follow-up agent."""
 import hashlib
 from app.models import Claim, Evidence, Verdict
 
