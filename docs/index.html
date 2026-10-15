@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#071015">
+  <meta name="description" content="DeepDive is a self-verifying multi-agent research analyst built for Agent Arena 2026.">
+  <meta property="og:title" content="DeepDive — Research that shows its working">
+  <meta property="og:description" content="Every claim is checked against its cited source before it reaches the report.">
+  <meta property="og:image" content="assets/evidence-constellation.webp">
+  <title>DeepDive — Self-Verifying Research Analyst</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet">
+  <style>
+    :root{--ink:#071015;--panel:#0d171e;--paper:#eee8dc;--muted:#96a3a9;--line:rgba(238,232,220,.14);--cyan:#79ded5;--amber:#f1a63a;--serif:'Newsreader',Georgia,serif;--sans:'DM Sans',sans-serif;--mono:'JetBrains Mono',monospace}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;overflow-x:hidden;background:var(--ink);color:var(--paper);font-family:var(--sans);-webkit-font-smoothing:antialiased}a{color:inherit}.shell{width:min(1240px,calc(100% - 40px));margin:auto}
+    nav{height:76px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line)}.brand{display:flex;align-items:center;gap:11px;text-decoration:none;font-weight:700}.mark{width:30px;height:30px;display:grid;place-items:center;background:var(--cyan);color:var(--ink);border-radius:2px 2px 10px 2px}.navlinks{display:flex;align-items:center;gap:24px;font:600 11px var(--mono);letter-spacing:.06em;text-transform:uppercase}.navlinks a{text-decoration:none;color:var(--muted)}.navlinks .repo{padding:10px 14px;border:1px solid var(--line);color:var(--paper);border-radius:2px 2px 9px 2px}
+    .hero{position:relative;min-height:680px;display:flex;align-items:center;overflow:hidden;border-bottom:1px solid var(--line);isolation:isolate}.hero:before{content:"";position:absolute;inset:0;z-index:-2;background:url('assets/evidence-constellation.webp') 62% center/cover no-repeat}.hero:after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,#071015 0%,rgba(7,16,21,.98) 36%,rgba(7,16,21,.5) 64%,rgba(7,16,21,.08) 100%)}.hero-copy{width:min(690px,66%);padding:90px 0}.eyebrow,.section-no{display:flex;align-items:center;gap:10px;color:var(--cyan);font:600 11px var(--mono);letter-spacing:.14em;text-transform:uppercase}.eyebrow:before{content:"";width:30px;height:1px;background:currentColor}.hero h1{margin:28px 0 26px;font:400 clamp(64px,8vw,126px)/.79 var(--serif);letter-spacing:-.065em}.hero h1 em{color:var(--cyan);font-weight:400}.lede{max-width:570px;color:#afbabf;font-size:18px;line-height:1.7}.actions{display:flex;gap:12px;margin-top:34px}.button{display:inline-flex;align-items:center;gap:10px;padding:13px 17px;text-decoration:none;font:600 12px var(--mono);border:1px solid var(--line);border-radius:2px 2px 10px 2px}.button.primary{background:var(--cyan);border-color:var(--cyan);color:var(--ink)}
+    .proof{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--line)}.proof article{padding:34px 30px;border-right:1px solid var(--line)}.proof article:last-child{border-right:0}.proof strong{display:block;color:var(--amber);font:500 40px var(--serif)}.proof span{display:block;margin-top:7px;color:var(--muted);font:600 10px/1.5 var(--mono);letter-spacing:.08em;text-transform:uppercase}
+    section.block{padding:110px 0;border-bottom:1px solid var(--line)}.section-head{display:grid;grid-template-columns:1.3fr .7fr;gap:60px;align-items:end;margin-bottom:50px}.section-head h2{margin:15px 0 0;font:400 clamp(46px,6vw,82px)/.92 var(--serif);letter-spacing:-.045em}.section-head p{margin:0;color:var(--muted);font-size:15px;line-height:1.75}.method{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}.method article{min-height:280px;padding:28px;background:var(--panel)}.method b{color:var(--cyan);font:600 11px var(--mono)}.method h3{margin:65px 0 14px;font:500 26px var(--serif)}.method p{margin:0;color:var(--muted);font-size:13px;line-height:1.65}
+    .diagram-wrap{overflow:hidden;border:1px solid var(--line);border-radius:2px 2px 18px 2px;background:#f5f6f7}.diagram{display:block;width:100%;height:min(78vh,850px);min-height:680px;border:0}
+    .results{display:grid;grid-template-columns:1.2fr repeat(3,1fr);border:1px solid var(--line)}.results>div{padding:25px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}.results>div:nth-child(4n){border-right:0}.results .head{color:var(--muted);font:600 10px var(--mono);letter-spacing:.08em;text-transform:uppercase}.results .topic{font-weight:600}.results .number{color:var(--cyan);font:500 28px var(--serif)}.result-note{margin-top:20px;color:var(--muted);font-size:12px;line-height:1.6}
+    footer{display:flex;justify-content:space-between;gap:30px;padding:50px 0 70px;color:var(--muted);font:500 11px var(--mono)}
+    @media(max-width:800px){.shell{width:min(calc(100% - 24px),1240px)}.navlinks a:not(.repo){display:none}.navlinks .repo{font-size:0;padding:10px 12px}.navlinks .repo:before{content:'GitHub ↗';font:600 10px var(--mono)}.hero{min-height:740px;align-items:flex-start}.hero:after{background:linear-gradient(180deg,#071015 0%,rgba(7,16,21,.94) 60%,rgba(7,16,21,.28) 100%)}.hero-copy{width:100%;padding:80px 0}.hero h1{font-size:clamp(52px,15vw,72px);letter-spacing:-.07em}.lede{font-size:16px}.proof{grid-template-columns:1fr 1fr}.proof article{padding:28px 18px}.proof article:nth-child(2){border-right:0}.section-head{grid-template-columns:1fr;gap:25px}.method{grid-template-columns:1fr}.method article{min-height:auto}.method h3{margin-top:35px}.diagram{min-height:720px}.results{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr) minmax(0,1fr)}.results>div{min-width:0;padding:18px 12px;overflow-wrap:anywhere}.results>div:nth-child(4n){border-right:1px solid var(--line)}.results>div:nth-child(3n){border-right:0}.results .attempted{display:none}.results .number{font-size:23px}footer{flex-direction:column}}
+  </style>
+</head>
+<body>
+  <header class="shell">
+    <nav>
+      <a class="brand" href="#top"><span class="mark">◇</span>DeepDive</a>
+      <div class="navlinks"><a href="#method">Method</a><a href="#architecture">Architecture</a><a href="#results">Evaluation</a><a class="repo" href="https://github.com/abh2050/deepdive-agent-arena-2026">View repository ↗</a></div>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="shell">
+        <div class="hero-copy">
+          <span class="eyebrow">Agent Arena 2026 · Track 01</span>
+          <h1>Research that<br><em>shows its working.</em></h1>
+          <p class="lede">DeepDive investigates an open question, challenges every candidate claim against its source, and publishes only what survives verification.</p>
+          <div class="actions"><a class="button primary" href="#architecture">Explore the system ↓</a><a class="button" href="https://github.com/abh2050/deepdive-agent-arena-2026#-getting-started">Run locally ↗</a></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="proof shell">
+      <article><strong>34</strong><span>claims accepted<br>in live Mesh evaluation</span></article>
+      <article><strong>35</strong><span>candidates rejected<br>instead of invented</span></article>
+      <article><strong>2×</strong><span>hard verification gates<br>quote + entailment</span></article>
+      <article><strong>100%</strong><span>auditable decisions<br>stored per run</span></article>
+    </div>
+
+    <section class="block shell" id="method">
+      <div class="section-head"><div><span class="section-no">01 / Method</span><h2>Trust is a pipeline,<br>not a prompt.</h2></div><p>A LangGraph coordinator assigns distinct jobs, tracks coverage, and loops back when evidence is thin. The final report is assembled by deterministic code, so synthesis cannot add new facts.</p></div>
+      <div class="method">
+        <article><b>01</b><h3>Decompose</h3><p>The planner creates focused, non-overlapping subquestions that make gaps visible.</p></article>
+        <article><b>02</b><h3>Retrieve</h3><p>Researchers fetch real pages and preserve excerpts, URLs, titles, and quality signals.</p></article>
+        <article><b>03</b><h3>Challenge</h3><p>Every atomic claim must pass verbatim quote membership and independent entailment review.</p></article>
+        <article><b>04</b><h3>Publish</h3><p>Only verified claims reach the cited report; every rejection remains in the audit ledger.</p></article>
+      </div>
+    </section>
+
+    <section class="block shell" id="architecture">
+      <div class="section-head"><div><span class="section-no">02 / System atlas</span><h2>Follow every claim<br>through the machine.</h2></div><p>This is an explorable Archify diagram of the implemented system. Select components, trace relationships, switch themes, or export the view.</p></div>
+      <div class="diagram-wrap"><iframe class="diagram" src="assets/deepdive-architecture.html" title="Interactive DeepDive system architecture" loading="lazy"></iframe></div>
+    </section>
+
+    <section class="block shell" id="results">
+      <div class="section-head"><div><span class="section-no">03 / Live evaluation</span><h2>Rejection is<br>a feature.</h2></div><p>These numbers came from live web retrieval and live Mesh-routed agent calls. A low pass rate is evidence that unsupported candidates were removed instead of being polished into the final answer.</p></div>
+      <div class="results">
+        <div class="head">Benchmark</div><div class="head attempted">Attempted</div><div class="head">Verified</div><div class="head">Coverage</div>
+        <div class="topic">EV battery supply risks</div><div class="number attempted">32</div><div class="number">9</div><div class="number">100%</div>
+        <div class="topic">Heat-pump savings</div><div class="number attempted">25</div><div class="number">16</div><div class="number">80%</div>
+        <div class="topic">Grid-storage safety</div><div class="number attempted">12</div><div class="number">9</div><div class="number">60%</div>
+      </div>
+      <p class="result-note">Evaluation mode: <strong>live_mesh</strong> · 69 candidate claims · 34 verified · 35 rejected or unverified · bounded retry triggered for every benchmark.</p>
+    </section>
+  </main>
+
+  <footer class="shell"><span>DeepDive · Self-Verifying Research Analyst</span><span>LangGraph · Mesh API · ChromaDB · SQLite</span></footer>
+</body>
+</html>
