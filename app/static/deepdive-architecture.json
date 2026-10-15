@@ -5,7 +5,8 @@
     "title": "DeepDive — Verified Research Architecture",
     "quality_profile": "showcase",
     "locale": "en",
-    "viewBox": [1280, 720]
+    "output": "app/static/deepdive-architecture.html",
+    "viewBox": [1240, 720]
   },
   "components": [
     { "id": "researcher", "type": "external", "label": "Researcher", "sublabel": "Question + follow-ups", "pos": [45, 315], "size": [135, 68] },
@@ -14,7 +15,7 @@
     { "id": "coordinator", "type": "backend", "label": "LangGraph Coordinator", "sublabel": "Coverage-driven retry loop", "pos": [625, 315], "size": [170, 68] },
     { "id": "agents", "type": "backend", "label": "Specialist Agents", "sublabel": "Plan · research · claims", "pos": [855, 165], "size": [165, 68] },
     { "id": "verification", "type": "security", "label": "Verification Gate", "sublabel": "Quote match + entailment", "pos": [855, 315], "size": [165, 68] },
-    { "id": "synthesis", "type": "backend", "label": "Deterministic Synthesis", "sublabel": "Verified claims only", "pos": [1080, 315], "size": [165, 68] },
+    { "id": "synthesis", "type": "backend", "label": "Deterministic Synthesis", "sublabel": "Verified claims only", "pos": [1045, 315], "size": [155, 68] },
     { "id": "mesh", "type": "cloud", "label": "Mesh API", "sublabel": "Only model gateway", "pos": [855, 35], "size": [165, 68] },
     { "id": "evidence", "type": "database", "label": "Evidence Index", "sublabel": "Web excerpts + Chroma", "pos": [625, 505], "size": [170, 68] },
     { "id": "audit", "type": "database", "label": "Audit Ledger", "sublabel": "SQLite event history", "pos": [855, 505], "size": [165, 68] }

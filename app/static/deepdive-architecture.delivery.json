@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "cb70b538-ebe6-4d5a-a6d7-860ab32b1c62",
+  "status": "current",
+  "command": "deliver",
+  "type": "architecture",
+  "input": "/Users/abhishekshah/Desktop/hackathon/app/static/deepdive-architecture.json",
+  "output": "/Users/abhishekshah/Desktop/hackathon/app/static/deepdive-architecture.html",
+  "specification": {
+    "sha256": "6780a0bef2563533305af28a433de31a16720d1ba4f33d94ce9d6a24c776aba6",
+    "bytes": 4130
+  },
+  "artifact": {
+    "sha256": "e9c2f99c85fccc001e26cea6ca85927709736b66d8e4f6fae2da8502edc19623",
+    "bytes": 827075
+  }
+}

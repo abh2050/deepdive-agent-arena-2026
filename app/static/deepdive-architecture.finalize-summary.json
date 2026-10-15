@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 1,
+  "ok": true,
+  "command": "finalize",
+  "status": "pass",
+  "type": "architecture",
+  "quality": "showcase",
+  "specification": {
+    "path": "/Users/abhishekshah/Desktop/hackathon/app/static/deepdive-architecture.json",
+    "sha256": "6780a0bef2563533305af28a433de31a16720d1ba4f33d94ce9d6a24c776aba6",
+    "bytes": 4130
+  },
+  "artifact": {
+    "path": "/Users/abhishekshah/Desktop/hackathon/app/static/deepdive-architecture.html",
+    "sha256": "e9c2f99c85fccc001e26cea6ca85927709736b66d8e4f6fae2da8502edc19623",
+    "bytes": 827075
+  },
+  "gates": {
+    "validate": "pass",
+    "deliver": "pass",
+    "check": "pass",
+    "browser-check": "pass"
+  },
+  "diagnostics": [],
+  "diagnosticSummary": {
+    "total": 0,
+    "shown": 0,
+    "truncated": false
+  },
+  "evidence": {
+    "receipt": "/Users/abhishekshah/Desktop/hackathon/app/static/deepdive-architecture.finalize.json",
+    "summaryReceipt": "/Users/abhishekshah/Desktop/hackathon/app/static/deepdive-architecture.finalize-summary.json",
+    "browserCheckReceipt": "/Users/abhishekshah/Desktop/hackathon/app/static/deepdive-architecture.browser-check.json"
+  },
+  "update": {
+    "status": "current",
+    "installedVersion": "3.1.0",
+    "availableVersion": "3.1.0",
+    "releaseNotes": null,
+    "checkedAt": "2026-10-15T15:38:53.492Z",
+    "source": "cache",
+    "noticeRequired": false,
+    "noticeText": null
+  },
+  "visualReview": "not-requested",
+  "durationMs": 3016,
+  "visualReviewRecommendation": {
+    "action": "inspect-route-readability",
+    "signals": {
+      "routesOverSuggestedBends": 2,
+      "routesOverSuggestedStretch": 1
+    },
+    "reason": "Automated gates passed, but crossings or detours still need perceptual review before claiming visual quality.",
+    "affectedRoutes": {
+      "crossings": [],
+      "detours": [
+        {
+          "relationship": {
+            "id": "grounding",
+            "from": "evidence",
+            "to": "verification",
+            "label": "stored excerpts",
+            "collectionIndex": 8,
+            "artifactIndex": 9
+          },
+          "bends": 3,
+          "stretch": 1
+        },
+        {
+          "relationship": {
+            "id": "events",
+            "from": "coordinator",
+            "to": "audit",
+            "label": "every decision",
+            "collectionIndex": 9,
+            "artifactIndex": 10
+          },
+          "bends": 4,
+          "stretch": 1.896
+        }
+      ],
+      "truncated": false
+    },
+    "hints": [
+      "evidence → verification needs 3 bends: move node evidence or verification so they share a row or column with matching centers, or sit diagonally with a clear corner.",
+      "coordinator → audit needs 4 bends: move node coordinator or audit so they share a row or column with matching centers, or sit diagonally with a clear corner."
+    ],
+    "repair": "Trace these relationships at the desktop viewport. For Architecture, use references/architecture-layout-repair.md: reflow a blocked main path or tangled connected scene, and repair an isolated defect locally only when the surrounding composition is accepted. Preserve all semantic content and user-fixed geometry. Rerun finalize once after the edit."
+  }
+}
