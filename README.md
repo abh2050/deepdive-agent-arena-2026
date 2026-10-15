@@ -228,6 +228,9 @@ based on HTTP status and SDK exception type, not fragile provider message text.
 
 - **Mandatory Mesh Routing**: All generative model calls route strictly through `https://api.meshapi.ai/v1` in [`app/mesh.py`](app/mesh.py).
 - **Official GitHub Actions Workflow**: Configured at [`.github/workflows/agent-arena-2026-checks.yml`](.github/workflows/agent-arena-2026-checks.yml).
+  Genuine technical failures remain blocking. Until the dashboard form is
+  submitted, the organizer's expected “entry not submitted” response appears
+  as a warning because there is no submission record to update yet.
 - **Required GitHub Secrets**:
   - `MESH_API_KEY`: Your Mesh API key starting with `rsk_`.
   - `SUBMISSION_TOKEN`: Your hackathon submission token from the dashboard.
