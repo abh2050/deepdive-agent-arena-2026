@@ -1,0 +1,1 @@
+Most AI research asks you to trust the answer. DeepDive makes every published claim prove itself—down to the stored quote, verifier verdict, and audit event.

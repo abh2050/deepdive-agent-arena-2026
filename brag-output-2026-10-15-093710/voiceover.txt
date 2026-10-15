@@ -1,0 +1,21 @@
+A citation can look convincing and still fail to support the sentence beside it. DeepDive checks the evidence before it publishes the claim.
+
+It is a self-verifying research analyst built for Agent Arena twenty twenty-six. Ask an open question, and it produces a report whose claims remain traceable to captured source text.
+
+A LangGraph coordinator plans the work. Researchers gather web evidence. A claim writer proposes atomic statements. Then a separate verifier decides what survives.
+
+The gate is deliberately strict: the quoted text must exist verbatim in the stored excerpt, and an independent Mesh-routed model must confirm that it entails the claim.
+
+Let's run the live app on a question where the answer needs both supporting evidence and limitations.
+
+DeepDive decomposes the question, searches, captures evidence, challenges claims, and retries when coverage is thin.
+
+This result is not optimized for a flattering score. Unsupported or ambiguous candidates are rejected. Only verified claims enter the deterministic report, with coverage and pass-rate metrics exposed.
+
+Click any citation and the evidence becomes inspectable: the original URL, the captured excerpt, the exact quote, its quality signal, and the verifier's decision. That is claim-level provenance, not a decorative bibliography.
+
+The audit trail records the process too: planning, searches, evidence, verdicts, retries, and final metrics, so a judge can inspect how the answer was made.
+
+Follow-up questions stay grounded in the same run and return the evidence IDs they actually used.
+
+DeepDive: no stored quote, no verification, no published claim. Try the live app and inspect every decision.

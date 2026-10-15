@@ -23,6 +23,7 @@
     .results{display:grid;grid-template-columns:1.2fr repeat(3,1fr);border:1px solid var(--line)}.results>div{padding:25px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}.results>div:nth-child(4n){border-right:0}.results .head{color:var(--muted);font:600 10px var(--mono);letter-spacing:.08em;text-transform:uppercase}.results .topic{font-weight:600}.results .number{color:var(--cyan);font:500 28px var(--serif)}.result-note{margin-top:20px;color:var(--muted);font-size:12px;line-height:1.6}
     footer{display:flex;justify-content:space-between;gap:30px;padding:50px 0 70px;color:var(--muted);font:500 11px var(--mono)}
     @media(max-width:800px){.shell{width:min(calc(100% - 24px),1240px)}.navlinks a:not(.repo){display:none}.navlinks .repo{font-size:0;padding:10px 12px}.navlinks .repo:before{content:'GitHub ↗';font:600 10px var(--mono)}.hero{min-height:740px;align-items:flex-start}.hero:after{background:linear-gradient(180deg,#071015 0%,rgba(7,16,21,.94) 60%,rgba(7,16,21,.28) 100%)}.hero-copy{width:100%;padding:80px 0}.hero h1{font-size:clamp(52px,15vw,72px);letter-spacing:-.07em}.lede{font-size:16px}.proof{grid-template-columns:1fr 1fr}.proof article{padding:28px 18px}.proof article:nth-child(2){border-right:0}.section-head{grid-template-columns:1fr;gap:25px}.method{grid-template-columns:1fr}.method article{min-height:auto}.method h3{margin-top:35px}.diagram{min-height:720px}.results{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr) minmax(0,1fr)}.results>div{min-width:0;padding:18px 12px;overflow-wrap:anywhere}.results>div:nth-child(4n){border-right:1px solid var(--line)}.results>div:nth-child(3n){border-right:0}.results .attempted{display:none}.results .number{font-size:23px}footer{flex-direction:column}}
+    .film{padding:72px 0;border-bottom:1px solid var(--line)}.film-grid{display:grid;grid-template-columns:minmax(240px,.35fr) minmax(0,1fr);gap:40px;align-items:center}.film h2{margin:18px 0;font:400 clamp(38px,5vw,66px)/.95 var(--serif);letter-spacing:-.045em}.film p{color:#9ca8ad;line-height:1.7}.film video{display:block;width:100%;border:1px solid rgba(119,221,213,.22);background:#080c10}@media(max-width:800px){.film-grid{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
@@ -42,6 +43,13 @@
           <p class="lede">DeepDive investigates an open question, challenges every candidate claim against its source, and publishes only what survives verification.</p>
           <div class="actions"><a class="button primary" href="https://deepdive-agent-arena-2026.vercel.app/">Launch live app ↗</a><a class="button" href="#architecture">Explore the system ↓</a></div>
         </div>
+      </div>
+    </section>
+
+    <section class="film">
+      <div class="shell film-grid">
+        <div><span class="section-no">Product film / 01:56</span><h2>See why every claim has to earn its place.</h2><p>A narrated walkthrough of DeepDive's orchestration, dual verification, evidence inspection, and audit trail.</p></div>
+        <video controls preload="metadata" poster="assets/deepdive-demo.jpg"><source src="assets/deepdive-demo.mp4" type="video/mp4">Your browser does not support embedded video.</video>
       </div>
     </section>
 
