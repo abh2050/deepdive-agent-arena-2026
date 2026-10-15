@@ -77,7 +77,8 @@ claim prove itself—down to the stored quote, verifier verdict, and audit event
 
 1. **The doubt — 8s:** Evidence Inspector cold open; “A citation is not proof.”
 2. **The promise — 11s:** Hero and one-sentence product definition.
-3. **The mechanism — 23s:** Verification-loop diagram and the dual gate.
+3. **The mechanism — 23s:** Briefly open the separate system-design site for
+   the verification loop and dual gate, then return to the product workspace.
 4. **The live run — 15s:** Submit the heat-pump question; honestly condense wait.
 5. **The result — 16s:** Verified/rejected counts, coverage, deterministic report.
 6. **The proof — 17s:** Inspect URL, excerpt, exact quote, quality, and verdict.

@@ -1,14 +1,5 @@
 // DeepDive Frontend Application Logic
 document.addEventListener('DOMContentLoaded', () => {
-  const systemDiagram = document.getElementById('systemDiagram');
-  document.querySelectorAll('[data-diagram-src]').forEach((button) => {
-    button.addEventListener('click', () => {
-      document.querySelectorAll('[data-diagram-src]').forEach((item) => item.classList.remove('active'));
-      button.classList.add('active');
-      systemDiagram.src = button.dataset.diagramSrc;
-      systemDiagram.title = button.dataset.diagramTitle;
-    });
-  });
   // State
   let currentRun = null;
   let currentAuditEvents = [];
@@ -481,8 +472,8 @@ document.addEventListener('DOMContentLoaded', () => {
   btnCopyReport.addEventListener('click', () => {
     if (!currentRun || !currentRun.markdown) return;
     navigator.clipboard.writeText(currentRun.markdown);
-    btnCopyReport.textContent = '✓ Copied!';
-    setTimeout(() => { btnCopyReport.textContent = '📋 Copy Markdown'; }, 2000);
+    btnCopyReport.textContent = 'Copied';
+    setTimeout(() => { btnCopyReport.textContent = 'Copy markdown'; }, 2000);
   });
 
   btnDownloadMd.addEventListener('click', () => {

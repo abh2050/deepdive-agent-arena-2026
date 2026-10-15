@@ -26,16 +26,16 @@
 
       <nav class="nav-tabs" id="navTabs">
         <button class="nav-tab active" data-tab="tab-research">
-          <span class="tab-icon">🔬</span> Research Lab
+          Research
         </button>
         <button class="nav-tab" data-tab="tab-audit">
-          <span class="tab-icon">📜</span> Audit Trail
+          Audit trail
         </button>
         <button class="nav-tab" data-tab="tab-history">
-          <span class="tab-icon">📁</span> Run History <span class="badge" id="historyCount">0</span>
+          Run history <span class="badge" id="historyCount">0</span>
         </button>
         <button class="nav-tab" data-tab="tab-eval">
-          <span class="tab-icon">📊</span> Benchmark Eval
+          Evaluation
         </button>
       </nav>
 
@@ -45,7 +45,7 @@
           <span class="status-label" id="meshStatusText">Mesh API: Checking...</span>
         </div>
         <button class="btn btn-secondary btn-sm" id="btnSettings" title="Configure settings & keys">
-          <span>⚙️</span> Settings
+          Settings
         </button>
       </div>
     </header>
@@ -54,53 +54,21 @@
     <main class="main-content">
       <!-- TAB 1: RESEARCH LAB -->
       <section class="tab-pane active" id="tab-research">
-        <section class="editorial-hero" aria-labelledby="heroTitle">
-          <div class="hero-art" aria-hidden="true"></div>
-          <div class="hero-copy">
-            <div class="hero-kicker"><span></span> Agent Arena 2026 · Track 01</div>
-            <h2 id="heroTitle">Research that shows<br><em>its working.</em></h2>
-            <p>DeepDive turns an open question into an evidence map—then challenges every claim before it reaches your report.</p>
-            <div class="hero-proof">
-              <div><strong>34</strong><span>claims verified<br>in live evaluation</span></div>
-              <div><strong>2×</strong><span>verification gates<br>quote + entailment</span></div>
-              <div><strong>100%</strong><span>auditable<br>decision trail</span></div>
-            </div>
+        <section class="workspace-intro" aria-labelledby="workspaceTitle">
+          <div>
+            <span class="eyebrow">Verified research workspace</span>
+            <h2 id="workspaceTitle">Ask a hard question.<br><em>Inspect every claim.</em></h2>
           </div>
-          <div class="hero-caption">
-            <span>FIELD NOTE / 001</span>
-            <p>Source fragments become claims only after surviving a verbatim evidence check.</p>
-          </div>
-        </section>
-
-        <section class="architecture-feature" aria-labelledby="architectureTitle">
-          <div class="architecture-intro">
-            <div>
-              <span class="section-index">SYSTEM ATLAS / 04 LENSES</span>
-              <h3 id="architectureTitle">Every claim has a route.<br>Every route leaves a trace.</h3>
-            </div>
-            <p>Explore the topology, request sequence, verification loop, and evidence lineage. Each repository-backed view is interactive and exportable.</p>
-          </div>
-          <div class="diagram-tabs" role="tablist" aria-label="DeepDive diagram views">
-            <button class="diagram-tab active" type="button" data-diagram-src="/static/deepdive-architecture.html" data-diagram-title="Interactive DeepDive verified research architecture">Architecture</button>
-            <button class="diagram-tab" type="button" data-diagram-src="/static/deepdive-sequence.html" data-diagram-title="Interactive DeepDive request sequence">Request sequence</button>
-            <button class="diagram-tab" type="button" data-diagram-src="/static/deepdive-workflow.html" data-diagram-title="Interactive DeepDive verification workflow">Verification loop</button>
-            <button class="diagram-tab" type="button" data-diagram-src="/static/deepdive-dataflow.html" data-diagram-title="Interactive DeepDive evidence lineage">Evidence lineage</button>
-          </div>
-          <div class="architecture-frame-wrap">
-            <iframe
-              class="architecture-frame"
-              id="systemDiagram"
-              src="/static/deepdive-architecture.html"
-              title="Interactive DeepDive verified research architecture"
-              loading="lazy">
-            </iframe>
+          <div class="workspace-intro-copy">
+            <p>DeepDive researches across the open web, rejects unsupported claims, and returns a report with inspectable source evidence.</p>
+            <a class="text-link" href="https://abh2050.github.io/deepdive-agent-arena-2026/" target="_blank" rel="noopener">View system design <span aria-hidden="true">↗</span></a>
           </div>
         </section>
 
         <!-- Research Query Bar -->
         <div class="query-section glass-panel">
           <div class="query-input-wrap">
-            <span class="search-icon">🔍</span>
+            <span class="search-icon" aria-hidden="true"></span>
             <input type="text" id="queryInput" placeholder="Enter an in-depth research question (e.g. What major supply-chain risks affected EV batteries in 2025 and 2026?)" autocomplete="off">
             <button class="btn btn-primary" id="btnRunResearch">
               <span class="btn-text">Execute DeepDive</span>
@@ -111,13 +79,13 @@
           <div class="quick-prompts">
             <span class="quick-label">Track 01 Benchmarks:</span>
             <button class="prompt-chip" data-prompt="What major supply-chain risks affected EV batteries in 2025 and 2026?">
-              ⚡ EV Battery Supply Risks
+              EV battery supply risks
             </button>
             <button class="prompt-chip" data-prompt="What evidence supports and limits the energy savings of residential heat pumps?">
-              🏠 Heat Pump Energy Savings
+              Heat-pump energy savings
             </button>
             <button class="prompt-chip" data-prompt="What are the main grid-scale battery storage safety and reliability risks?">
-              🔋 Grid-Scale Storage Safety
+              Grid-scale storage safety
             </button>
           </div>
 
@@ -138,7 +106,7 @@
           </div>
           <div class="pipeline-flow">
             <div class="agent-node" id="nodePlanner">
-              <div class="node-icon">🧠</div>
+              <div class="node-icon">01</div>
               <div class="node-info">
                 <span class="node-title">1. Planner</span>
                 <span class="node-desc" id="plannerDesc">Awaiting question</span>
@@ -146,10 +114,10 @@
               <span class="node-badge" id="plannerBadge">—</span>
             </div>
 
-            <div class="flow-arrow">➔</div>
+            <div class="flow-arrow" aria-hidden="true"></div>
 
             <div class="agent-node" id="nodeResearcher">
-              <div class="node-icon">🌐</div>
+              <div class="node-icon">02</div>
               <div class="node-info">
                 <span class="node-title">2. Researcher</span>
                 <span class="node-desc" id="researcherDesc">Search & page fetch</span>
@@ -157,10 +125,10 @@
               <span class="node-badge" id="researcherBadge">—</span>
             </div>
 
-            <div class="flow-arrow">➔</div>
+            <div class="flow-arrow" aria-hidden="true"></div>
 
             <div class="agent-node" id="nodeWriter">
-              <div class="node-icon">✍️</div>
+              <div class="node-icon">03</div>
               <div class="node-info">
                 <span class="node-title">3. Claim Writer</span>
                 <span class="node-desc" id="writerDesc">Atomic claims + quotes</span>
@@ -168,10 +136,10 @@
               <span class="node-badge" id="writerBadge">—</span>
             </div>
 
-            <div class="flow-arrow">➔</div>
+            <div class="flow-arrow" aria-hidden="true"></div>
 
             <div class="agent-node" id="nodeVerifier">
-              <div class="node-icon">⚖️</div>
+              <div class="node-icon">04</div>
               <div class="node-info">
                 <span class="node-title">4. Verifier</span>
                 <span class="node-desc" id="verifierDesc">Quote check + Entailment</span>
@@ -179,10 +147,10 @@
               <span class="node-badge" id="verifierBadge">—</span>
             </div>
 
-            <div class="flow-arrow">➔</div>
+            <div class="flow-arrow" aria-hidden="true"></div>
 
             <div class="agent-node" id="nodeSynthesizer">
-              <div class="node-icon">📑</div>
+              <div class="node-icon">05</div>
               <div class="node-info">
                 <span class="node-title">5. Synthesizer</span>
                 <span class="node-desc" id="synthesizerDesc">Deterministic report</span>
@@ -231,14 +199,13 @@
                 <span class="report-run-id" id="displayRunId">No run loaded</span>
               </div>
               <div class="header-actions">
-                <button class="btn btn-secondary btn-xs" id="btnCopyReport">📋 Copy Markdown</button>
-                <button class="btn btn-secondary btn-xs" id="btnDownloadMd">⬇ Download .md</button>
-                <button class="btn btn-secondary btn-xs" id="btnPrintReport">🖨️ Export PDF</button>
+                <button class="btn btn-secondary btn-xs" id="btnCopyReport">Copy markdown</button>
+                <button class="btn btn-secondary btn-xs" id="btnDownloadMd">Download .md</button>
+                <button class="btn btn-secondary btn-xs" id="btnPrintReport">Export PDF</button>
               </div>
             </div>
             <div class="report-body" id="reportBody">
               <div class="empty-state">
-                <div class="empty-icon">📝</div>
                 <h4>No Report Generated Yet</h4>
                 <p>Submit a question above to start research. The system will decompose your query, retrieve authoritative web pages, extract atomic quotes, run entailment verification, and compose a hallucination-free report.</p>
               </div>
@@ -246,7 +213,7 @@
             <!-- Grounded Follow-up Section -->
             <div class="followup-section hidden" id="followupSection">
               <div class="followup-header">
-                <span class="followup-title">💬 Conversational Follow-Up Query</span>
+                <span class="followup-title">Ask a follow-up</span>
                 <span class="followup-sub">Grounded strictly in Chroma-indexed evidence from this run</span>
               </div>
               <div class="followup-input-wrap">
@@ -273,7 +240,6 @@
             </div>
             <div class="inspector-body" id="inspectorBody">
               <div class="empty-state">
-                <div class="empty-icon">🔍</div>
                 <h4>No Evidence Selected</h4>
                 <p>When a report is generated, click any citation link to view the exact excerpt, verbatim quote, source URL, domain trust score, and verification verdict.</p>
               </div>
@@ -318,7 +284,7 @@
               <h3>Previous Research Runs</h3>
               <p class="section-desc">Persistent history retrieved from SQLite database (`deepdive.sqlite3`).</p>
             </div>
-            <button class="btn btn-secondary btn-sm" id="btnRefreshHistory">↻ Refresh</button>
+              <button class="btn btn-secondary btn-sm" id="btnRefreshHistory">Refresh</button>
           </div>
           <div class="history-list" id="historyList">
             <div class="empty-state">
@@ -337,7 +303,7 @@
               <p class="section-desc">Automated evaluation on predeclared questions (`evaluation/questions.json`). Measures verification pass rate, subquestion coverage, and audit accuracy.</p>
             </div>
             <button class="btn btn-primary btn-sm" id="btnRunEval">
-              <span>▶ Run Benchmark Suite</span>
+              <span>Run benchmark suite</span>
               <span class="btn-spinner hidden" id="evalSpinner"></span>
             </button>
           </div>
@@ -359,7 +325,7 @@
       <div class="modal-card glass-panel">
         <div class="modal-header">
           <h3>Configuration & Credentials</h3>
-          <button class="modal-close" id="btnCloseSettings">✕</button>
+          <button class="modal-close" id="btnCloseSettings" aria-label="Close settings">Close</button>
         </div>
         <div class="modal-body">
           <div class="form-group">
