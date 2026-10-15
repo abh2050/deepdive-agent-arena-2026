@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "41fa9aeb-a703-4db6-a0a1-91b4051da75b",
+  "status": "current",
+  "command": "deliver",
+  "type": "workflow",
+  "input": "/Users/abhishekshah/Desktop/hackathon/.archify/workflow-deepdive-20261015-085833/candidate.json",
+  "output": "/Users/abhishekshah/Desktop/hackathon/docs/assets/deepdive-workflow.html",
+  "specification": {
+    "sha256": "de8c352b1abb10652454647edf4eb10234415b6840200fe383338c58e1c84ff3",
+    "bytes": 6389
+  },
+  "artifact": {
+    "sha256": "b76bd063c3599018bc71286116eec5cb2efc86dfa3656ad6ff702ea976d8f47f",
+    "bytes": 832459
+  }
+}

@@ -1424,6 +1424,33 @@ body {
   background: #f6f7f8;
 }
 
+.diagram-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .55rem;
+  margin-bottom: .85rem;
+}
+
+.diagram-tab {
+  appearance: none;
+  padding: .7rem .9rem;
+  border: 1px solid rgba(235, 229, 214, .14);
+  border-radius: 2px 2px 9px 2px;
+  background: transparent;
+  color: #93a0a8;
+  font: 600 .62rem/1 var(--font-mono);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.diagram-tab:hover,
+.diagram-tab.active {
+  border-color: #77ddd4;
+  background: rgba(119, 221, 212, .1);
+  color: #f2ede2;
+}
+
 .architecture-frame {
   display: block;
   width: 100%;

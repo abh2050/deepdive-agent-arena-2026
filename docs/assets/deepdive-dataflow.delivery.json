@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "a0853fa1-fab3-46c7-8a0d-fb5c815c14a5",
+  "status": "current",
+  "command": "deliver",
+  "type": "dataflow",
+  "input": "/Users/abhishekshah/Desktop/hackathon/.archify/dataflow-deepdive-20261015-085833/candidate.json",
+  "output": "/Users/abhishekshah/Desktop/hackathon/docs/assets/deepdive-dataflow.html",
+  "specification": {
+    "sha256": "27668a99eceb353908e58e0ce1b8562d24c5933e80aaa464557d2e9953ed6d9e",
+    "bytes": 5522
+  },
+  "artifact": {
+    "sha256": "2d1fe2133ade2125e806653d13589fa7b7cf46bb387aeeef658c22a2d74f9c47",
+    "bytes": 828260
+  }
+}

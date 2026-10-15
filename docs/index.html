@@ -19,7 +19,7 @@
     .hero{position:relative;min-height:680px;display:flex;align-items:center;overflow:hidden;border-bottom:1px solid var(--line);isolation:isolate}.hero:before{content:"";position:absolute;inset:0;z-index:-2;background:url('assets/evidence-constellation.webp') 62% center/cover no-repeat}.hero:after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,#071015 0%,rgba(7,16,21,.98) 36%,rgba(7,16,21,.5) 64%,rgba(7,16,21,.08) 100%)}.hero-copy{width:min(690px,66%);padding:90px 0}.eyebrow,.section-no{display:flex;align-items:center;gap:10px;color:var(--cyan);font:600 11px var(--mono);letter-spacing:.14em;text-transform:uppercase}.eyebrow:before{content:"";width:30px;height:1px;background:currentColor}.hero h1{margin:28px 0 26px;font:400 clamp(64px,8vw,126px)/.79 var(--serif);letter-spacing:-.065em}.hero h1 em{color:var(--cyan);font-weight:400}.lede{max-width:570px;color:#afbabf;font-size:18px;line-height:1.7}.actions{display:flex;gap:12px;margin-top:34px}.button{display:inline-flex;align-items:center;gap:10px;padding:13px 17px;text-decoration:none;font:600 12px var(--mono);border:1px solid var(--line);border-radius:2px 2px 10px 2px}.button.primary{background:var(--cyan);border-color:var(--cyan);color:var(--ink)}
     .proof{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--line)}.proof article{padding:34px 30px;border-right:1px solid var(--line)}.proof article:last-child{border-right:0}.proof strong{display:block;color:var(--amber);font:500 40px var(--serif)}.proof span{display:block;margin-top:7px;color:var(--muted);font:600 10px/1.5 var(--mono);letter-spacing:.08em;text-transform:uppercase}
     section.block{padding:110px 0;border-bottom:1px solid var(--line)}.section-head{display:grid;grid-template-columns:1.3fr .7fr;gap:60px;align-items:end;margin-bottom:50px}.section-head h2{margin:15px 0 0;font:400 clamp(46px,6vw,82px)/.92 var(--serif);letter-spacing:-.045em}.section-head p{margin:0;color:var(--muted);font-size:15px;line-height:1.75}.method{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}.method article{min-height:280px;padding:28px;background:var(--panel)}.method b{color:var(--cyan);font:600 11px var(--mono)}.method h3{margin:65px 0 14px;font:500 26px var(--serif)}.method p{margin:0;color:var(--muted);font-size:13px;line-height:1.65}
-    .diagram-wrap{overflow:hidden;border:1px solid var(--line);border-radius:2px 2px 18px 2px;background:#f5f6f7}.diagram{display:block;width:100%;height:min(78vh,850px);min-height:680px;border:0}
+    .diagram-tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}.diagram-tab{appearance:none;padding:11px 14px;border:1px solid var(--line);border-radius:2px 2px 9px 2px;background:transparent;color:var(--muted);font:600 10px var(--mono);letter-spacing:.07em;text-transform:uppercase;cursor:pointer}.diagram-tab:hover,.diagram-tab.active{border-color:var(--cyan);background:rgba(121,222,213,.1);color:var(--paper)}.diagram-wrap{overflow:hidden;border:1px solid var(--line);border-radius:2px 2px 18px 2px;background:#f5f6f7}.diagram{display:block;width:100%;height:min(78vh,850px);min-height:680px;border:0}.diagram-note{margin:14px 0 0;color:var(--muted);font:500 11px/1.6 var(--mono)}
     .results{display:grid;grid-template-columns:1.2fr repeat(3,1fr);border:1px solid var(--line)}.results>div{padding:25px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}.results>div:nth-child(4n){border-right:0}.results .head{color:var(--muted);font:600 10px var(--mono);letter-spacing:.08em;text-transform:uppercase}.results .topic{font-weight:600}.results .number{color:var(--cyan);font:500 28px var(--serif)}.result-note{margin-top:20px;color:var(--muted);font-size:12px;line-height:1.6}
     footer{display:flex;justify-content:space-between;gap:30px;padding:50px 0 70px;color:var(--muted);font:500 11px var(--mono)}
     @media(max-width:800px){.shell{width:min(calc(100% - 24px),1240px)}.navlinks a:not(.repo){display:none}.navlinks .repo{font-size:0;padding:10px 12px}.navlinks .repo:before{content:'GitHub ↗';font:600 10px var(--mono)}.hero{min-height:740px;align-items:flex-start}.hero:after{background:linear-gradient(180deg,#071015 0%,rgba(7,16,21,.94) 60%,rgba(7,16,21,.28) 100%)}.hero-copy{width:100%;padding:80px 0}.hero h1{font-size:clamp(52px,15vw,72px);letter-spacing:-.07em}.lede{font-size:16px}.proof{grid-template-columns:1fr 1fr}.proof article{padding:28px 18px}.proof article:nth-child(2){border-right:0}.section-head{grid-template-columns:1fr;gap:25px}.method{grid-template-columns:1fr}.method article{min-height:auto}.method h3{margin-top:35px}.diagram{min-height:720px}.results{grid-template-columns:minmax(0,1.2fr) minmax(0,1fr) minmax(0,1fr)}.results>div{min-width:0;padding:18px 12px;overflow-wrap:anywhere}.results>div:nth-child(4n){border-right:1px solid var(--line)}.results>div:nth-child(3n){border-right:0}.results .attempted{display:none}.results .number{font-size:23px}footer{flex-direction:column}}
@@ -63,8 +63,15 @@
     </section>
 
     <section class="block shell" id="architecture">
-      <div class="section-head"><div><span class="section-no">02 / System atlas</span><h2>Follow every claim<br>through the machine.</h2></div><p>This is an explorable Archify diagram of the implemented system. Select components, trace relationships, switch themes, or export the view.</p></div>
-      <div class="diagram-wrap"><iframe class="diagram" src="assets/deepdive-architecture.html" title="Interactive DeepDive system architecture" loading="lazy"></iframe></div>
+      <div class="section-head"><div><span class="section-no">02 / Four system lenses</span><h2>Follow every claim<br>through the machine.</h2></div><p>Explore four repository-backed Archify views: the system topology, request exchange, bounded verification loop, and evidence lineage. Every viewer supports themes, tracing, search, focus, and export.</p></div>
+      <div class="diagram-tabs" role="tablist" aria-label="DeepDive diagram views">
+        <button class="diagram-tab active" type="button" data-src="assets/deepdive-architecture.html" data-title="Interactive DeepDive system architecture">Architecture</button>
+        <button class="diagram-tab" type="button" data-src="assets/deepdive-sequence.html" data-title="Interactive DeepDive request sequence">Request sequence</button>
+        <button class="diagram-tab" type="button" data-src="assets/deepdive-workflow.html" data-title="Interactive DeepDive verification workflow">Verification loop</button>
+        <button class="diagram-tab" type="button" data-src="assets/deepdive-dataflow.html" data-title="Interactive DeepDive evidence data flow">Evidence lineage</button>
+      </div>
+      <div class="diagram-wrap"><iframe class="diagram" id="systemDiagram" src="assets/deepdive-architecture.html" title="Interactive DeepDive system architecture" loading="lazy"></iframe></div>
+      <p class="diagram-note">Choose a lens above, then use Route, Lens, search, themes, or Export inside the viewer.</p>
     </section>
 
     <section class="block shell" id="results">
@@ -80,5 +87,16 @@
   </main>
 
   <footer class="shell"><span>DeepDive · Self-Verifying Research Analyst</span><span>LangGraph · Mesh API · ChromaDB · SQLite</span></footer>
+  <script>
+    const diagram = document.getElementById('systemDiagram');
+    document.querySelectorAll('.diagram-tab').forEach((button) => {
+      button.addEventListener('click', () => {
+        document.querySelectorAll('.diagram-tab').forEach((item) => item.classList.remove('active'));
+        button.classList.add('active');
+        diagram.src = button.dataset.src;
+        diagram.title = button.dataset.title;
+      });
+    });
+  </script>
 </body>
 </html>

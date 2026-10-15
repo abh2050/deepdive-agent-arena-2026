@@ -1,5 +1,14 @@
 // DeepDive Frontend Application Logic
 document.addEventListener('DOMContentLoaded', () => {
+  const systemDiagram = document.getElementById('systemDiagram');
+  document.querySelectorAll('[data-diagram-src]').forEach((button) => {
+    button.addEventListener('click', () => {
+      document.querySelectorAll('[data-diagram-src]').forEach((item) => item.classList.remove('active'));
+      button.classList.add('active');
+      systemDiagram.src = button.dataset.diagramSrc;
+      systemDiagram.title = button.dataset.diagramTitle;
+    });
+  });
   // State
   let currentRun = null;
   let currentAuditEvents = [];

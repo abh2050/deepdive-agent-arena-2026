@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "receiptId": "86c1fd0a-2da4-43d9-bcd7-0615286c3deb",
+  "status": "current",
+  "command": "deliver",
+  "type": "sequence",
+  "input": "/Users/abhishekshah/Desktop/hackathon/.archify/sequence-deepdive-20261015-085833/candidate.json",
+  "output": "/Users/abhishekshah/Desktop/hackathon/docs/assets/deepdive-sequence.html",
+  "specification": {
+    "sha256": "26b8a17456e289edb3a77b7313d4eeb0d43932e5c4854cad7240cc0f2538d064",
+    "bytes": 4666
+  },
+  "artifact": {
+    "sha256": "70a24a35860e0d3e2690a8cdb52fb4ee8ee7c44fdf6ffc6e447e56b70effa844",
+    "bytes": 820673
+  }
+}

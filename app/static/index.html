@@ -75,14 +75,21 @@
         <section class="architecture-feature" aria-labelledby="architectureTitle">
           <div class="architecture-intro">
             <div>
-              <span class="section-index">SYSTEM ATLAS / 01</span>
+              <span class="section-index">SYSTEM ATLAS / 04 LENSES</span>
               <h3 id="architectureTitle">Every claim has a route.<br>Every route leaves a trace.</h3>
             </div>
-            <p>Explore the actual DeepDive architecture. Select components, follow relationships, switch themes, or export the diagram directly from the viewer.</p>
+            <p>Explore the topology, request sequence, verification loop, and evidence lineage. Each repository-backed view is interactive and exportable.</p>
+          </div>
+          <div class="diagram-tabs" role="tablist" aria-label="DeepDive diagram views">
+            <button class="diagram-tab active" type="button" data-diagram-src="/static/deepdive-architecture.html" data-diagram-title="Interactive DeepDive verified research architecture">Architecture</button>
+            <button class="diagram-tab" type="button" data-diagram-src="/static/deepdive-sequence.html" data-diagram-title="Interactive DeepDive request sequence">Request sequence</button>
+            <button class="diagram-tab" type="button" data-diagram-src="/static/deepdive-workflow.html" data-diagram-title="Interactive DeepDive verification workflow">Verification loop</button>
+            <button class="diagram-tab" type="button" data-diagram-src="/static/deepdive-dataflow.html" data-diagram-title="Interactive DeepDive evidence lineage">Evidence lineage</button>
           </div>
           <div class="architecture-frame-wrap">
             <iframe
               class="architecture-frame"
+              id="systemDiagram"
               src="/static/deepdive-architecture.html"
               title="Interactive DeepDive verified research architecture"
               loading="lazy">

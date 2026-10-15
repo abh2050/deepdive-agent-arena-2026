@@ -19,35 +19,33 @@ DeepDive is a multi-agent research analyst designed from the ground up to solve 
 
 ---
 
-## 🏛️ System Architecture
+## 🏛️ Interactive System Atlas
 
-The [interactive system atlas](https://abh2050.github.io/deepdive-agent-arena-2026/assets/deepdive-architecture.html) maps the implemented request path, evidence stores, mandatory Mesh gateway, verification boundary, retry loop, and deterministic synthesizer. It supports light/dark themes, relationship tracing, search, and export.
+Four validated Archify views explain the system from complementary angles. Click any preview to open the full interactive diagram with light/dark themes, relationship tracing, guided lenses, repository evidence, search, and export.
 
-```mermaid
-flowchart TD
-    Q[User Research Question] --> P[🧠 Planner Agent: Decomposes into Subquestions]
-    P --> R[🌐 Researcher Agent: Targeted Query Gen + Web Retrieval]
-    R --> E[(Source Excerpts & Provenance Cache)]
-    E --> C_DB[(ChromaDB: Lexical Vector Index)]
-    E --> W[✍️ ClaimWriter: Extracts Atomic Claims + Verbatim Quotes]
-    W --> V[⚖️ Verifier: Hard String Quote Match + Mesh Entailment]
-    V -->|Supported| A[Accepted Claims]
-    V -->|Rejected / Unverified| X[Audit Rejection Reason]
-    V --> COV{Are Subquestions Covered?}
-    COV -->|No & Retries Left| R
-    COV -->|Yes or Retries Maxed| CD[🔍 Contradiction Detector: Cross-Source Conflict Check]
-    A --> CD
-    CD --> S[📑 Deterministic Synthesizer]
-    S --> REP[Markdown Report + Audited Citations]
-    P --> L[(SQLite Audit Trail: deepdive.sqlite3)]
-    R --> L
-    V --> L
-    X --> L
-    CD --> L
-    REP --> L
-    REP --> FU[💬 Conversational Follow-Up Agent: Grounded via ChromaDB]
-    C_DB --> FU
-```
+### System architecture
+
+[![DeepDive system architecture](docs/assets/deepdive-architecture-preview.png)](https://abh2050.github.io/deepdive-agent-arena-2026/assets/deepdive-architecture.html)
+
+The topology view maps the user-facing desk, FastAPI boundary, LangGraph coordinator, mandatory Mesh gateway, evidence stores, verifier, bounded retry, and deterministic synthesis.
+
+### Research request sequence
+
+[![DeepDive research request sequence](docs/assets/deepdive-sequence-preview.png)](https://abh2050.github.io/deepdive-agent-arena-2026/assets/deepdive-sequence.html)
+
+The sequence view follows a single request across the browser, API, coordinator, Mesh, web sources, and persistent stores—including the exact point where deterministic quote containment precedes semantic entailment.
+
+### Verification workflow
+
+[![DeepDive verification workflow](docs/assets/deepdive-workflow-preview.png)](https://abh2050.github.io/deepdive-agent-arena-2026/assets/deepdive-workflow.html)
+
+The workflow view makes the fail-closed claim gate, rejection path, audit trail, and bounded coverage retry explicit.
+
+### Evidence data flow
+
+[![DeepDive evidence lineage](docs/assets/deepdive-dataflow-preview.png)](https://abh2050.github.io/deepdive-agent-arena-2026/assets/deepdive-dataflow.html)
+
+The lineage view shows how untrusted pages become normalized evidence records, candidate claims, verified claims, persisted audit events, final reports, and grounded follow-ups.
 
 ---
 
