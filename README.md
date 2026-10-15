@@ -7,9 +7,12 @@
 
 [![Offline unit tests](https://github.com/abh2050/deepdive-agent-arena-2026/actions/workflows/unit-tests.yml/badge.svg)](https://github.com/abh2050/deepdive-agent-arena-2026/actions/workflows/unit-tests.yml)
 [![Agent Arena Checks](https://github.com/abh2050/deepdive-agent-arena-2026/actions/workflows/agent-arena-2026-checks.yml/badge.svg)](https://github.com/abh2050/deepdive-agent-arena-2026/actions/workflows/agent-arena-2026-checks.yml)
-[![GitHub Pages](https://img.shields.io/badge/Live_Demo-GitHub_Pages-79ded5?style=flat-square&logo=github)](https://abh2050.github.io/deepdive-agent-arena-2026/)
+[![Live App](https://img.shields.io/badge/Live_App-Vercel-79ded5?style=flat-square&logo=vercel)](https://deepdive-agent-arena-2026.vercel.app/)
+[![Project Showcase](https://img.shields.io/badge/Project_Showcase-GitHub_Pages-f1a63a?style=flat-square&logo=github)](https://abh2050.github.io/deepdive-agent-arena-2026/)
 
-**[Explore the live project showcase →](https://abh2050.github.io/deepdive-agent-arena-2026/)**
+**[Launch the live interactive app →](https://deepdive-agent-arena-2026.vercel.app/)**
+
+[Explore the project showcase and system atlas →](https://abh2050.github.io/deepdive-agent-arena-2026/)
 
 DeepDive is a multi-agent research analyst designed from the ground up to solve the **trust and hallucination problem** in AI-generated research. Instead of treating citation generation as a cosmetic step or relying on a single long prompt, DeepDive enforces **hard, auditable verification boundaries**:
 1. Every candidate claim must cite a real, fetched evidence ID and contain a **verbatim quote** extracted directly from that source excerpt.
