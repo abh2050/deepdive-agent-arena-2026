@@ -111,6 +111,18 @@ These checked-in results were produced with live web retrieval and all agent cal
 
 ## 🚀 Getting Started
 
+### Live Vercel deployment
+
+The repository includes a Vercel-native FastAPI entrypoint and Fluid Compute
+configuration. Import the repository in Vercel, add `MESH_API_KEY` to the
+Production, Preview, and Development environments, and deploy. The hosted mode
+returns audit events with each report and sends report context with follow-ups,
+so the core judging experience does not depend on one serverless instance
+retaining local files. Local development continues to use SQLite and ChromaDB.
+
+Do not add `SUBMISSION_TOKEN` to Vercel; that secret belongs only in GitHub
+Actions.
+
 ### Prerequisites
 - Python 3.11+
 - Git

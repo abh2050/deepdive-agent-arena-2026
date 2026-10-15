@@ -16,6 +16,18 @@ app = FastAPI(title='DeepDive | Self-Verifying Research Analyst', version='0.1.0
 store = AuditStore()
 
 
+def is_serverless() -> bool:
+    return bool(os.getenv('VERCEL'))
+
+
+def build_evidence_index():
+    """Use durable Chroma locally; Vercel requests carry their evidence inline."""
+    if is_serverless():
+        return None
+    chroma_path = os.getenv('CHROMA_PATH', './data/chroma')
+    return ChromaEvidenceIndex(chroma_path)
+
+
 @app.exception_handler(MeshGatewayError)
 async def mesh_gateway_error_handler(_request, exc: MeshGatewayError):
     return JSONResponse(status_code=exc.status_code, content={'detail': exc.as_detail()})
@@ -42,17 +54,22 @@ def get_config():
         'model': MESH_MODEL,
         'max_rounds': MAX_RESEARCH_ROUNDS,
         'has_api_key': bool(os.getenv('MESH_API_KEY')),
-        'version': '0.1.0'
+        'version': '0.1.0',
+        'runtime': 'vercel' if is_serverless() else 'local',
     }
 
 @app.post('/research')
 def research(request: Question):
     try:
         llm = get_llm(api_key=request.api_key, demo_mode=request.demo_mode)
-        chroma_path = os.getenv("CHROMA_PATH", "./data/chroma")
-        evidence_index = ChromaEvidenceIndex(chroma_path)
+        evidence_index = build_evidence_index()
         coordinator = Coordinator(llm, WebRetriever(), store, evidence_index=evidence_index)
-        return coordinator.run(request.question)
+        report = coordinator.run(request.question)
+        # Returning the audit with the report makes the primary experience
+        # reliable even when the next request reaches another Vercel instance.
+        result = report.model_dump()
+        result['audit_events'] = store.events(report.run_id)
+        return result
     except MeshGatewayError:
         raise
     except Exception as exc:
@@ -92,7 +109,7 @@ def download_markdown(run_id: str):
 
 @app.post('/runs/{run_id}/followup')
 def followup_query(run_id: str, payload: dict):
-    report = store.get(run_id)
+    report = store.get(run_id) or payload.get('report')
     if not report:
         raise HTTPException(404, 'Unknown run')
     question = payload.get('question', '').strip()
@@ -100,12 +117,16 @@ def followup_query(run_id: str, payload: dict):
         raise HTTPException(400, 'Question is required')
     demo_mode = payload.get('demo_mode', not bool(os.getenv('MESH_API_KEY')))
     llm = get_llm(api_key=payload.get('api_key'), demo_mode=demo_mode)
-    chroma_path = os.getenv("CHROMA_PATH", "./data/chroma")
-    evidence_index = ChromaEvidenceIndex(chroma_path)
+    evidence_index = build_evidence_index()
     from app.agents import FollowUpAgent
     agent = FollowUpAgent(llm, evidence_index=evidence_index)
     res = agent.answer(run_id, question, report)
-    store.log(run_id, 'followup_query', question=question, answer=res.get('answer'), cited=res.get('cited_evidence'))
+    try:
+        store.log(run_id, 'followup_query', question=question, answer=res.get('answer'), cited=res.get('cited_evidence'))
+    except Exception:
+        # A response must not fail merely because an ephemeral serverless
+        # instance could not retain a nonessential audit write.
+        pass
     return res
 
 
@@ -139,8 +160,7 @@ def run_evaluation():
     questions = json.loads(p.read_text(encoding='utf-8'))
     demo = not bool(os.getenv('MESH_API_KEY'))
     llm = get_llm(demo_mode=demo)
-    chroma_path = os.getenv("CHROMA_PATH", "./data/chroma")
-    evidence_index = ChromaEvidenceIndex(chroma_path)
+    evidence_index = build_evidence_index()
     coordinator = Coordinator(llm, WebRetriever(), store, evidence_index=evidence_index)
     
     rows = []
@@ -153,6 +173,6 @@ def run_evaluation():
         }
         rows.append(row)
         
-    out_path = Path('evaluation/results.json')
+    out_path = Path('/tmp/evaluation-results.json' if is_serverless() else 'evaluation/results.json')
     out_path.write_text(json.dumps(rows, indent=2), encoding='utf-8')
     return rows

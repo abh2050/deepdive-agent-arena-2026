@@ -37,6 +37,8 @@ def test_research_demo_mode(client):
     assert 'run_id' in data
     assert 'markdown' in data
     assert 'metrics' in data
+    assert isinstance(data['audit_events'], list)
+    assert any(event['event'] == 'completed' for event in data['audit_events'])
     assert data['metrics']['attempted_claims'] >= 0
 
     run_id = data['run_id']

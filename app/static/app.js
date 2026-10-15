@@ -209,7 +209,12 @@ document.addEventListener('DOMContentLoaded', () => {
       const report = await response.json();
       finishPipelineSuccess(report);
       renderReport(report);
-      await fetchAndRenderAudit(report.run_id);
+      if (Array.isArray(report.audit_events)) {
+        currentAuditEvents = report.audit_events;
+        renderAuditTimeline();
+      } else {
+        await fetchAndRenderAudit(report.run_id);
+      }
       loadHistory();
     } catch (err) {
       alert(`Research Failed: ${err.message}`);
@@ -526,7 +531,12 @@ document.addEventListener('DOMContentLoaded', () => {
       const res = await fetch(`/runs/${currentRun.run_id}/followup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question: q, demo_mode: demoMode, api_key: apiKey }),
+        body: JSON.stringify({
+          question: q,
+          demo_mode: demoMode,
+          api_key: apiKey,
+          report: currentRun,
+        }),
       });
 
       if (!res.ok) {

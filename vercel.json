@@ -1,0 +1,14 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "fluid": true,
+  "functions": {
+    "app/main.py": {
+      "maxDuration": 300,
+      "includeFiles": [
+        "app/static/**",
+        "evaluation/**"
+      ],
+      "excludeFiles": "{tests/**,docs/**,.archify/**,deepdive-scaffold/**}"
+    }
+  }
+}
