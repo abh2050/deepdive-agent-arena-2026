@@ -1,0 +1,5 @@
+[
+  {"id":"ev_market","question":"What major supply-chain risks affected EV batteries in 2025 and 2026?","expected_topics":["supply chain","material prices","manufacturing"]},
+  {"id":"heat_pumps","question":"What evidence supports and limits the energy savings of residential heat pumps?","expected_topics":["efficiency","climate","installation"]},
+  {"id":"grid_storage","question":"What are the main grid-scale battery storage safety and reliability risks?","expected_topics":["thermal runaway","operations","mitigation"]}
+]

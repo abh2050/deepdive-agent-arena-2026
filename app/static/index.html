@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DeepDive — Self-Verifying Research Analyst</title>
+  <meta name="description" content="Self-Verifying Research Analyst using LangGraph, Mesh API, DuckDuckGo retrieval, deterministic verifier, and ChromaDB vector store.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Top Navigation Bar -->
+    <header class="topbar">
+      <div class="brand">
+        <div class="logo-mark">
+          <span class="logo-icon">◈</span>
+        </div>
+        <div class="brand-text">
+          <h1>DeepDive</h1>
+          <span class="brand-subtitle">Self-Verifying Research Analyst</span>
+        </div>
+      </div>
+
+      <nav class="nav-tabs" id="navTabs">
+        <button class="nav-tab active" data-tab="tab-research">
+          <span class="tab-icon">🔬</span> Research Lab
+        </button>
+        <button class="nav-tab" data-tab="tab-audit">
+          <span class="tab-icon">📜</span> Audit Trail
+        </button>
+        <button class="nav-tab" data-tab="tab-history">
+          <span class="tab-icon">📁</span> Run History <span class="badge" id="historyCount">0</span>
+        </button>
+        <button class="nav-tab" data-tab="tab-eval">
+          <span class="tab-icon">📊</span> Benchmark Eval
+        </button>
+      </nav>
+
+      <div class="topbar-actions">
+        <div class="mesh-status-indicator" id="meshStatusBadge" title="Mesh API Status">
+          <span class="status-dot"></span>
+          <span class="status-label" id="meshStatusText">Mesh API: Checking...</span>
+        </div>
+        <button class="btn btn-secondary btn-sm" id="btnSettings" title="Configure settings & keys">
+          <span>⚙️</span> Settings
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- TAB 1: RESEARCH LAB -->
+      <section class="tab-pane active" id="tab-research">
+        <section class="editorial-hero" aria-labelledby="heroTitle">
+          <div class="hero-art" aria-hidden="true"></div>
+          <div class="hero-copy">
+            <div class="hero-kicker"><span></span> Agent Arena 2026 · Track 01</div>
+            <h2 id="heroTitle">Research that shows<br><em>its working.</em></h2>
+            <p>DeepDive turns an open question into an evidence map—then challenges every claim before it reaches your report.</p>
+            <div class="hero-proof">
+              <div><strong>34</strong><span>claims verified<br>in live evaluation</span></div>
+              <div><strong>2×</strong><span>verification gates<br>quote + entailment</span></div>
+              <div><strong>100%</strong><span>auditable<br>decision trail</span></div>
+            </div>
+          </div>
+          <div class="hero-caption">
+            <span>FIELD NOTE / 001</span>
+            <p>Source fragments become claims only after surviving a verbatim evidence check.</p>
+          </div>
+        </section>
+
+        <section class="architecture-feature" aria-labelledby="architectureTitle">
+          <div class="architecture-intro">
+            <div>
+              <span class="section-index">SYSTEM ATLAS / 01</span>
+              <h3 id="architectureTitle">Every claim has a route.<br>Every route leaves a trace.</h3>
+            </div>
+            <p>Explore the actual DeepDive architecture. Select components, follow relationships, switch themes, or export the diagram directly from the viewer.</p>
+          </div>
+          <div class="architecture-frame-wrap">
+            <iframe
+              class="architecture-frame"
+              src="/static/deepdive-architecture.html"
+              title="Interactive DeepDive verified research architecture"
+              loading="lazy">
+            </iframe>
+          </div>
+        </section>
+
+        <!-- Research Query Bar -->
+        <div class="query-section glass-panel">
+          <div class="query-input-wrap">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="queryInput" placeholder="Enter an in-depth research question (e.g. What major supply-chain risks affected EV batteries in 2025 and 2026?)" autocomplete="off">
+            <button class="btn btn-primary" id="btnRunResearch">
+              <span class="btn-text">Execute DeepDive</span>
+              <span class="btn-spinner hidden"></span>
+            </button>
+          </div>
+
+          <div class="quick-prompts">
+            <span class="quick-label">Track 01 Benchmarks:</span>
+            <button class="prompt-chip" data-prompt="What major supply-chain risks affected EV batteries in 2025 and 2026?">
+              ⚡ EV Battery Supply Risks
+            </button>
+            <button class="prompt-chip" data-prompt="What evidence supports and limits the energy savings of residential heat pumps?">
+              🏠 Heat Pump Energy Savings
+            </button>
+            <button class="prompt-chip" data-prompt="What are the main grid-scale battery storage safety and reliability risks?">
+              🔋 Grid-Scale Storage Safety
+            </button>
+          </div>
+
+          <div class="execution-options">
+            <label class="toggle-control">
+              <input type="checkbox" id="demoModeToggle">
+              <span class="toggle-slider"></span>
+              <span class="toggle-text">Offline / Demo Mode (instant verification without consuming Mesh credits)</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Pipeline DAG Visualizer -->
+        <div class="pipeline-section glass-panel" id="pipelineSection">
+          <div class="section-header">
+            <h3>Multi-Agent Orchestration Pipeline</h3>
+            <span class="pipeline-status" id="pipelineStatus">Idle</span>
+          </div>
+          <div class="pipeline-flow">
+            <div class="agent-node" id="nodePlanner">
+              <div class="node-icon">🧠</div>
+              <div class="node-info">
+                <span class="node-title">1. Planner</span>
+                <span class="node-desc" id="plannerDesc">Awaiting question</span>
+              </div>
+              <span class="node-badge" id="plannerBadge">—</span>
+            </div>
+
+            <div class="flow-arrow">➔</div>
+
+            <div class="agent-node" id="nodeResearcher">
+              <div class="node-icon">🌐</div>
+              <div class="node-info">
+                <span class="node-title">2. Researcher</span>
+                <span class="node-desc" id="researcherDesc">Search & page fetch</span>
+              </div>
+              <span class="node-badge" id="researcherBadge">—</span>
+            </div>
+
+            <div class="flow-arrow">➔</div>
+
+            <div class="agent-node" id="nodeWriter">
+              <div class="node-icon">✍️</div>
+              <div class="node-info">
+                <span class="node-title">3. Claim Writer</span>
+                <span class="node-desc" id="writerDesc">Atomic claims + quotes</span>
+              </div>
+              <span class="node-badge" id="writerBadge">—</span>
+            </div>
+
+            <div class="flow-arrow">➔</div>
+
+            <div class="agent-node" id="nodeVerifier">
+              <div class="node-icon">⚖️</div>
+              <div class="node-info">
+                <span class="node-title">4. Verifier</span>
+                <span class="node-desc" id="verifierDesc">Quote check + Entailment</span>
+              </div>
+              <span class="node-badge" id="verifierBadge">—</span>
+            </div>
+
+            <div class="flow-arrow">➔</div>
+
+            <div class="agent-node" id="nodeSynthesizer">
+              <div class="node-icon">📑</div>
+              <div class="node-info">
+                <span class="node-title">5. Synthesizer</span>
+                <span class="node-desc" id="synthesizerDesc">Deterministic report</span>
+              </div>
+              <span class="node-badge" id="synthesizerBadge">—</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Metrics Strip -->
+        <div class="metrics-grid hidden" id="metricsGrid">
+          <div class="metric-card glass-panel">
+            <span class="metric-label">Attempted Claims</span>
+            <span class="metric-value" id="valAttempted">0</span>
+            <span class="metric-sub">Atomic propositions</span>
+          </div>
+          <div class="metric-card glass-panel metric-success">
+            <span class="metric-label">Verified Claims</span>
+            <span class="metric-value" id="valVerified">0</span>
+            <span class="metric-sub">Passes quote + entailment</span>
+          </div>
+          <div class="metric-card glass-panel metric-danger">
+            <span class="metric-label">Rejected / Unverified</span>
+            <span class="metric-value" id="valRejected">0</span>
+            <span class="metric-sub">Filtered from final report</span>
+          </div>
+          <div class="metric-card glass-panel metric-highlight">
+            <span class="metric-label">Verifier Pass Rate</span>
+            <span class="metric-value" id="valPassRate">0%</span>
+            <span class="metric-sub">Precision gate</span>
+          </div>
+          <div class="metric-card glass-panel metric-info">
+            <span class="metric-label">Subquestion Coverage</span>
+            <span class="metric-value" id="valCoverage">0%</span>
+            <span class="metric-sub">Addressed topics</span>
+          </div>
+        </div>
+
+        <!-- Split Workspace: Report & Evidence Inspector -->
+        <div class="workspace-grid" id="workspaceGrid">
+          <!-- Report Column -->
+          <div class="report-panel glass-panel">
+            <div class="panel-header">
+              <div class="header-left">
+                <h3>Executive Verified Report</h3>
+                <span class="report-run-id" id="displayRunId">No run loaded</span>
+              </div>
+              <div class="header-actions">
+                <button class="btn btn-secondary btn-xs" id="btnCopyReport">📋 Copy Markdown</button>
+                <button class="btn btn-secondary btn-xs" id="btnDownloadMd">⬇ Download .md</button>
+                <button class="btn btn-secondary btn-xs" id="btnPrintReport">🖨️ Export PDF</button>
+              </div>
+            </div>
+            <div class="report-body" id="reportBody">
+              <div class="empty-state">
+                <div class="empty-icon">📝</div>
+                <h4>No Report Generated Yet</h4>
+                <p>Submit a question above to start research. The system will decompose your query, retrieve authoritative web pages, extract atomic quotes, run entailment verification, and compose a hallucination-free report.</p>
+              </div>
+            </div>
+            <!-- Grounded Follow-up Section -->
+            <div class="followup-section hidden" id="followupSection">
+              <div class="followup-header">
+                <span class="followup-title">💬 Conversational Follow-Up Query</span>
+                <span class="followup-sub">Grounded strictly in Chroma-indexed evidence from this run</span>
+              </div>
+              <div class="followup-input-wrap">
+                <input type="text" id="followupInput" placeholder="Ask a follow-up question about this report...">
+                <button class="btn btn-primary btn-sm" id="btnSendFollowup">
+                  <span id="btnFollowupText">Ask</span>
+                  <span class="btn-spinner hidden" id="followupSpinner"></span>
+                </button>
+              </div>
+              <div class="followup-answer hidden" id="followupAnswer">
+                <p class="answer-text" id="followupAnswerText"></p>
+                <div class="cited-badges" id="followupCitedBadges"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Evidence & Audit Inspector Column -->
+          <div class="inspector-panel glass-panel">
+            <div class="panel-header">
+              <div class="header-left">
+                <h3>Evidence & Citation Inspector</h3>
+                <span class="inspector-sub">Click any citation [e_xxx] to inspect source provenance</span>
+              </div>
+            </div>
+            <div class="inspector-body" id="inspectorBody">
+              <div class="empty-state">
+                <div class="empty-icon">🔍</div>
+                <h4>No Evidence Selected</h4>
+                <p>When a report is generated, click any citation link to view the exact excerpt, verbatim quote, source URL, domain trust score, and verification verdict.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: AUDIT TRAIL -->
+      <section class="tab-pane" id="tab-audit">
+        <div class="glass-panel audit-container">
+          <div class="section-header">
+            <div>
+              <h3>Auditable Decision Trail</h3>
+              <p class="section-desc">Full immutable event log stored in SQLite. Every planner decision, web query, fetched URL, candidate quote, verifier reasoning, and retry is recorded.</p>
+            </div>
+            <div class="audit-controls">
+              <select id="auditEventFilter" class="select-control">
+                <option value="ALL">All Events</option>
+                <option value="plan">Planning (plan)</option>
+                <option value="search">Search Queries (search)</option>
+                <option value="evidence">Evidence Stored (evidence)</option>
+                <option value="verification">Verification Judgments (verification)</option>
+                <option value="research_retry">Research Retries (research_retry)</option>
+              </select>
+              <button class="btn btn-secondary btn-sm" id="btnExportAuditJson">Export Audit JSON</button>
+            </div>
+          </div>
+          <div class="audit-timeline" id="auditTimeline">
+            <div class="empty-state">
+              <p>Run a research query to view its live audit log.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: RUN HISTORY -->
+      <section class="tab-pane" id="tab-history">
+        <div class="glass-panel history-container">
+          <div class="section-header">
+            <div>
+              <h3>Previous Research Runs</h3>
+              <p class="section-desc">Persistent history retrieved from SQLite database (`deepdive.sqlite3`).</p>
+            </div>
+            <button class="btn btn-secondary btn-sm" id="btnRefreshHistory">↻ Refresh</button>
+          </div>
+          <div class="history-list" id="historyList">
+            <div class="empty-state">
+              <p>Loading run history...</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 4: BENCHMARK EVAL -->
+      <section class="tab-pane" id="tab-eval">
+        <div class="glass-panel eval-container">
+          <div class="section-header">
+            <div>
+              <h3>Track 01 Live Benchmark Evaluation</h3>
+              <p class="section-desc">Automated evaluation on predeclared questions (`evaluation/questions.json`). Measures verification pass rate, subquestion coverage, and audit accuracy.</p>
+            </div>
+            <button class="btn btn-primary btn-sm" id="btnRunEval">
+              <span>▶ Run Benchmark Suite</span>
+              <span class="btn-spinner hidden" id="evalSpinner"></span>
+            </button>
+          </div>
+
+          <div class="benchmark-grid" id="evalQuestionsList">
+            <!-- Rendered by JS -->
+          </div>
+
+          <div class="eval-results-card glass-panel" id="evalResultsPanel">
+            <h4>Benchmark Execution Results (`evaluation/results.json`)</h4>
+            <pre class="code-box" id="evalResultsJson">No evaluation run recorded yet.</pre>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Settings Modal -->
+    <div class="modal-backdrop hidden" id="settingsModal">
+      <div class="modal-card glass-panel">
+        <div class="modal-header">
+          <h3>Configuration & Credentials</h3>
+          <button class="modal-close" id="btnCloseSettings">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="inputApiKey">Mesh API Key</label>
+            <input type="password" id="inputApiKey" placeholder="rsk_... (Mesh API Key)">
+            <span class="form-hint">Used for all LLM calls through <code>https://api.meshapi.ai/v1</code>. Saved to session or .env.</span>
+          </div>
+
+          <div class="form-group">
+            <label for="inputModel">Mesh Model</label>
+            <input type="text" id="inputModel" value="openai/gpt-4o" placeholder="openai/gpt-4o">
+            <span class="form-hint">Model identifier routed via Mesh API choke point.</span>
+          </div>
+
+          <div class="form-group">
+            <label>Vector Store & Retrieval</label>
+            <div class="static-value">ChromaDB (Deterministic local lexical vector store, 384 dimensions)</div>
+          </div>
+
+          <div class="form-group">
+            <label>Audit Database</label>
+            <div class="static-value">SQLite3 (<code>deepdive.sqlite3</code>)</div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" id="btnCancelSettings">Cancel</button>
+          <button class="btn btn-primary" id="btnSaveSettings">Save Settings</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

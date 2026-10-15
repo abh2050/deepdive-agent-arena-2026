@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "DeepDive — Verified Research Architecture",
+    "quality_profile": "showcase",
+    "locale": "en",
+    "viewBox": [1280, 720]
+  },
+  "components": [
+    { "id": "researcher", "type": "external", "label": "Researcher", "sublabel": "Question + follow-ups", "pos": [45, 315], "size": [135, 68] },
+    { "id": "interface", "type": "frontend", "label": "Evidence Desk", "sublabel": "Interactive web UI", "pos": [225, 315], "size": [150, 68] },
+    { "id": "api", "type": "backend", "label": "FastAPI", "sublabel": "Research + audit API", "pos": [425, 315], "size": [150, 68] },
+    { "id": "coordinator", "type": "backend", "label": "LangGraph Coordinator", "sublabel": "Coverage-driven retry loop", "pos": [625, 315], "size": [170, 68] },
+    { "id": "agents", "type": "backend", "label": "Specialist Agents", "sublabel": "Plan · research · claims", "pos": [855, 165], "size": [165, 68] },
+    { "id": "verification", "type": "security", "label": "Verification Gate", "sublabel": "Quote match + entailment", "pos": [855, 315], "size": [165, 68] },
+    { "id": "synthesis", "type": "backend", "label": "Deterministic Synthesis", "sublabel": "Verified claims only", "pos": [1080, 315], "size": [165, 68] },
+    { "id": "mesh", "type": "cloud", "label": "Mesh API", "sublabel": "Only model gateway", "pos": [855, 35], "size": [165, 68] },
+    { "id": "evidence", "type": "database", "label": "Evidence Index", "sublabel": "Web excerpts + Chroma", "pos": [625, 505], "size": [170, 68] },
+    { "id": "audit", "type": "database", "label": "Audit Ledger", "sublabel": "SQLite event history", "pos": [855, 505], "size": [165, 68] }
+  ],
+  "boundaries": [
+    { "kind": "region", "label": "DeepDive application", "wraps": ["interface", "api", "coordinator", "agents", "verification", "synthesis", "evidence", "audit"], "pad": 22 },
+    { "kind": "security-group", "label": "Verified-output boundary", "wraps": ["verification", "synthesis"], "pad": 14 }
+  ],
+  "connections": [
+    { "id": "submit", "from": "researcher", "to": "interface", "label": "research question", "variant": "emphasis", "labelAt": [203, 397] },
+    { "id": "request", "from": "interface", "to": "api", "label": "POST /research", "labelAt": [400, 397] },
+    { "id": "orchestrate", "from": "api", "to": "coordinator", "label": "run state" },
+    { "id": "delegate", "from": "coordinator", "to": "agents", "label": "subquestions", "fromSide": "top", "toSide": "left" },
+    { "id": "modelcalls", "from": "agents", "to": "mesh", "label": "JSON model calls", "variant": "security", "fromSide": "top", "toSide": "bottom" },
+    { "id": "candidates", "from": "agents", "to": "verification", "label": "claims + quotes", "fromSide": "bottom", "toSide": "top", "labelAt": [938, 247] },
+    { "id": "accepted", "from": "verification", "to": "synthesis", "label": "supported only", "variant": "emphasis", "labelAt": [1050, 397] },
+    { "id": "retrieval", "from": "coordinator", "to": "evidence", "label": "fetch + index", "fromSide": "bottom", "toSide": "top", "labelAt": [670, 450] },
+    { "id": "grounding", "from": "evidence", "to": "verification", "label": "stored excerpts", "fromSide": "right", "toSide": "bottom", "via": [[815, 539], [815, 430], [937.5, 430]], "labelAt": [870, 446] },
+    { "id": "events", "from": "coordinator", "to": "audit", "label": "every decision", "variant": "dashed", "fromSide": "bottom", "toSide": "bottom", "via": [[710, 410], [600, 410], [600, 650], [937.5, 650]], "labelAt": [800, 666] },
+    { "id": "retry", "from": "verification", "to": "coordinator", "label": "thin coverage → retry", "variant": "dashed", "fromSide": "left", "toSide": "right", "labelAt": [825, 397] }
+  ],
+  "cards": [
+    { "dot": "cyan", "title": "Trust invariant", "items": ["No accepted claim without a stored quote", "No LLM writes the final report"] },
+    { "dot": "amber", "title": "Recovery behavior", "items": ["Missing coverage triggers bounded research", "Rejected claims remain visible in the audit"] }
+  ]
+}
