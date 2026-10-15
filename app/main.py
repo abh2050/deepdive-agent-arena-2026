@@ -2,11 +2,11 @@ import json
 import os
 from pathlib import Path
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import HTMLResponse, PlainTextResponse
+from fastapi.responses import HTMLResponse, JSONResponse, PlainTextResponse
 from fastapi.staticfiles import StaticFiles
 from app.config import MESH_MODEL, MAX_RESEARCH_ROUNDS
 from app.coordinator import Coordinator
-from app.mesh import get_llm, MeshLLM
+from app.mesh import get_llm, MeshGatewayError
 from app.models import Question
 from app.retrieval import WebRetriever
 from app.store import AuditStore
@@ -14,6 +14,11 @@ from app.vector_store import ChromaEvidenceIndex
 
 app = FastAPI(title='DeepDive | Self-Verifying Research Analyst', version='0.1.0')
 store = AuditStore()
+
+
+@app.exception_handler(MeshGatewayError)
+async def mesh_gateway_error_handler(_request, exc: MeshGatewayError):
+    return JSONResponse(status_code=exc.status_code, content={'detail': exc.as_detail()})
 
 # Static assets directory
 static_dir = Path(__file__).parent / 'static'
@@ -48,8 +53,18 @@ def research(request: Question):
         evidence_index = ChromaEvidenceIndex(chroma_path)
         coordinator = Coordinator(llm, WebRetriever(), store, evidence_index=evidence_index)
         return coordinator.run(request.question)
+    except MeshGatewayError:
+        raise
     except Exception as exc:
-        raise HTTPException(status_code=502, detail=f'Research failed: {type(exc).__name__}: {str(exc)}') from exc
+        # Keep internal exception text out of the public API response.
+        raise HTTPException(
+            status_code=500,
+            detail={
+                'code': 'research_internal_error',
+                'message': 'Research could not be completed due to an internal error.',
+                'retryable': False,
+            },
+        ) from exc
 
 @app.get('/runs')
 def list_runs():

@@ -192,6 +192,23 @@ python -m evaluation.run_eval
 | `GET` | `/evaluation/questions`| Returns Track 01 benchmark questions. |
 | `POST` | `/evaluation/run` | Triggers evaluation suite execution. |
 
+Provider failures use an application-owned response shape instead of exposing the
+changing text returned by Mesh or its upstream model providers:
+
+```json
+{
+  "detail": {
+    "code": "mesh_rate_limited",
+    "message": "Mesh is temporarily rate-limiting requests. Please retry shortly.",
+    "retryable": true
+  }
+}
+```
+
+The stable codes cover authentication, credits, rate limits, timeouts, outages,
+invalid model responses, and unclassified request failures. Classification is
+based on HTTP status and SDK exception type, not fragile provider message text.
+
 ---
 
 ## 🔒 Hackathon & CI Compliance

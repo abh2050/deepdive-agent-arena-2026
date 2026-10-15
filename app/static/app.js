@@ -190,7 +190,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (!response.ok) {
         const err = await response.json().catch(() => ({ detail: 'Research request failed' }));
-        throw new Error(err.detail || 'Research failed');
+        const detail = err.detail;
+        const message = typeof detail === 'object' && detail !== null
+          ? detail.message
+          : detail;
+        throw new Error(message || 'Research failed');
       }
 
       const report = await response.json();

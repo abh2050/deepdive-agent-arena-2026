@@ -2,10 +2,79 @@
 import json
 import os
 import re
+from dataclasses import dataclass
 from openai import OpenAI
 from app.config import MESH_MODEL
 
 MESH_BASE_URL = 'https://api.meshapi.ai/v1'
+
+
+@dataclass
+class MeshGatewayError(Exception):
+    """Stable, safe error contract at the Mesh provider boundary."""
+
+    code: str
+    message: str
+    status_code: int = 503
+    retryable: bool = False
+
+    def __str__(self) -> str:
+        return self.message
+
+    def as_detail(self) -> dict:
+        return {
+            'code': self.code,
+            'message': self.message,
+            'retryable': self.retryable,
+        }
+
+
+def normalize_mesh_error(exc: Exception) -> MeshGatewayError:
+    """Map changing SDK/provider messages onto an application-owned contract."""
+    status = getattr(exc, 'status_code', None)
+    name = type(exc).__name__.lower()
+
+    if status in (401, 403) or 'authentication' in name or 'permission' in name:
+        return MeshGatewayError(
+            'mesh_authentication_failed',
+            'Mesh rejected the API credentials. Check the configured API key.',
+            401,
+            False,
+        )
+    if status == 402:
+        return MeshGatewayError(
+            'mesh_payment_required',
+            'Mesh credits are unavailable. Add credits or use demo mode.',
+            402,
+            False,
+        )
+    if status == 429 or 'ratelimit' in name or 'rate_limit' in name:
+        return MeshGatewayError(
+            'mesh_rate_limited',
+            'Mesh is temporarily rate-limiting requests. Please retry shortly.',
+            429,
+            True,
+        )
+    if 'timeout' in name:
+        return MeshGatewayError(
+            'mesh_timeout',
+            'Mesh did not respond in time. Please retry.',
+            504,
+            True,
+        )
+    if (status is not None and status >= 500) or 'connection' in name:
+        return MeshGatewayError(
+            'mesh_unavailable',
+            'Mesh is temporarily unavailable. Please retry shortly.',
+            503,
+            True,
+        )
+    return MeshGatewayError(
+        'mesh_request_failed',
+        'The model request could not be completed.',
+        502,
+        False,
+    )
 
 def extract_json_object(content: str) -> dict:
     content = content.strip()
@@ -40,16 +109,28 @@ class MeshLLM:
         self.model = model
 
     def json(self, role: str, instruction: str, payload: dict) -> dict:
-        response = self.client.chat.completions.create(
-            model=self.model,
-            temperature=0,
-            messages=[
-                {'role': 'system', 'content': role + '\nReturn only a valid JSON object; no Markdown fences.'},
-                {'role': 'user', 'content': instruction + '\nINPUT JSON:\n' + json.dumps(payload, ensure_ascii=False)},
-            ],
-        )
-        content = response.choices[0].message.content or ''
-        return extract_json_object(content)
+        try:
+            response = self.client.chat.completions.create(
+                model=self.model,
+                temperature=0,
+                messages=[
+                    {'role': 'system', 'content': role + '\nReturn only a valid JSON object; no Markdown fences.'},
+                    {'role': 'user', 'content': instruction + '\nINPUT JSON:\n' + json.dumps(payload, ensure_ascii=False)},
+                ],
+            )
+            content = response.choices[0].message.content or ''
+            return extract_json_object(content)
+        except MeshGatewayError:
+            raise
+        except (AttributeError, IndexError, TypeError, ValueError) as exc:
+            raise MeshGatewayError(
+                'mesh_invalid_response',
+                'Mesh returned a response the application could not read.',
+                502,
+                True,
+            ) from exc
+        except Exception as exc:
+            raise normalize_mesh_error(exc) from exc
 
 class SimulationMeshLLM:
     """High-fidelity deterministic simulation for offline testing, demos, and evaluation without a Mesh key."""
